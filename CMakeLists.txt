@@ -13,7 +13,8 @@ set(CMAKE_C_EXTENSIONS OFF)
 
 # TODO: make this step platform-dependent
 include_directories(
-	"/usr/include")
+	"/usr/include"
+	"/usr/local/include")
 
 # TODO: make this step platform-dependent
 link_directories(
