@@ -1,4 +1,6 @@
 
+#ifndef MAIN_H
+#define MAIN_H
 #include <getopt.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -62,3 +64,5 @@ int process_cmdline_args(const int argc, char *const *argv)
     }
     return 0;
 }
+
+#endif /* !MAIN_H */
