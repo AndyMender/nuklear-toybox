@@ -6,8 +6,8 @@
 #include <unistd.h>
 
 static short VERBOSITY = 0;
-static const VERBOSITY_MIN = 0;
-static const VERBOSITY_MAX = 4;
+static const short VERBOSITY_MIN = 0;
+static const short VERBOSITY_MAX = 4;
 
 /* Print a help text for app usage */
 void usage()
