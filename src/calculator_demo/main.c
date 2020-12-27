@@ -8,40 +8,51 @@
 #define NK_INCLUDE_DEFAULT_ALLOCATOR
 #define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_FONT_BAKING
-#define NK_INCLUDE_DEFAULT_FONT
 #include <nuklear.h>
 
 #include "main.h"
-
-void usage();
-int process_cmdline_args(const int, char *const *);
-void log_message(const char*, const short);
 
 enum difficulty{EASY, HARD};
 
 int main(const int argc, char *const *argv)
 {
-    int exit_code = 0;
-
-    exit_code = process_cmdline_args(argc, argv);
+    /* Process command-line args */
+    enum CmdlineCode exit_code = process_cmdline_args(argc, argv);
 
     /* Triggered 'help' message */
-    if (exit_code == 1) return EXIT_SUCCESS;
-    else if (exit_code == -1) {
-        log_message("Processing command-line arguments failed. Exiting!", -1);
+    if (exit_code == CMDLINE_HELP) return EXIT_SUCCESS;
+    /* Processing failed */
+    else if (exit_code == CMDLINE_ERROR) {
+        log_message("Processing command-line arguments failed. Exiting!", APP_LOG_ERROR);
         return EXIT_FAILURE;
     }
+
+    /* TODO: Create a font atlas and add a font */
+    struct nk_font_atlas atlas;
+
+    nk_font_atlas_init_default(&atlas);
+    nk_font_atlas_begin(&atlas);
+    nk_font *font = nk_font_atlas_add_from_file(&atlas, "Path/To/Your/TTF_Font.ttf", 13, 0);
+    nk_font_atlas_bake(&atlas, &img_width, &img_height, NK_FONT_ATLAS_RGBA32);
+    nk_font_atlas_end(&atlas, NULL, 0);
+
+        struct nk_context ctx;
+        nk_init_default(&ctx, &font->handle);
+        while (1) {
+
+        }
 
     /* Init gui state */
     enum difficulty op = EASY;
     float value = 0.6f;
     struct nk_context ctx;
-    /* TODO: Font needs to be loaded */
-    struct nk_user_font font;
 
     /* Init gui */
     /* NOTE: Use 'nk_init_fixed' with a fixed-size memory block for better memory control */
     nk_init_default(&ctx, &font);
+
+    /* Set font */
+    nk_style_set_font(&ctx, &font);
 
     /* Start GUI */
     if (nk_begin(&ctx, "Show", nk_rect(50, 50, 220, 220), NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE)) {
@@ -65,6 +76,9 @@ int main(const int argc, char *const *argv)
         }
         nk_layout_row_end(&ctx);
     }
+
+    /* Free memory used by the atlas and attached fonts */
+    nk_font_atlas_clear(&atlas);
 
     /* Free memory used by nuklear context */
     nk_clear(&ctx);
