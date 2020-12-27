@@ -49,6 +49,7 @@ enum CmdlineCode process_cmdline_args(const int argc, char *const *argv)
                 break;
             case 'h':
                 usage();
+                exit_code = CMDLINE_HELP;
                 break;
             default:
                 usage();
